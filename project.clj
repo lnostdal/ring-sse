@@ -1,6 +1,6 @@
 (defproject lnostdal/ring-sse "0.2.9"
   :description "Ring async (Spec 1.4+) Server-Sent Events handler (and helpers)"
-  :url "https://github.com/bobby/ring-sse"
+  :url "https://github.com/lnostdal/ring-sse"
   :license {:name "The MIT License"
             :url "https://opensource.org/licenses/MIT"}
   :dependencies [[org.clojure/clojure "1.10.2-rc1"]
@@ -11,10 +11,11 @@
                                      :sign-releases false
                                      :username      :env
                                      :password      :env}]]
-  :release-tasks [["vcs" "assert-committed"]
-                  ["change" "version" "leiningen.release/bump-version" "release"]
-                  ["vcs" "commit"]
-                  ["vcs" "tag"]
-                  ["change" "version" "leiningen.release/bump-version"]
-                  ["vcs" "commit"]
-                  ["vcs" "push"]])
+  ;; :release-tasks [["vcs" "assert-committed"]
+  ;;                 ["change" "version" "leiningen.release/bump-version" "release"]
+  ;;                 ["vcs" "commit"]
+  ;;                 ["vcs" "tag"]
+  ;;                 ["change" "version" "leiningen.release/bump-version"]
+  ;;                 ["vcs" "commit"]
+  ;;                 ["vcs" "push"]]
+  )
