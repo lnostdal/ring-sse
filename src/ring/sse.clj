@@ -10,20 +10,22 @@
 (extend-protocol ring/StreamableResponseBody
   clojure.core.async.impl.channels.ManyToManyChannel
   (write-body-to-stream [ch response ^java.io.OutputStream output-stream]
-    (async/thread
-      (with-open [os  output-stream
-                  out (io/writer os)]
-        (try
-          (loop []
-            (if-some [^String msg (async/<!! ch)]
-              (do (.write out msg)
-                  (.flush out)
-                  (recur))
-              :done))
-          (catch Exception e
-            (prn {:event "error while writing from channel to output-stream" :exception e :ch ch})
-            :error)
-          (finally (async/close! ch)))))))
+    (let [out (io/writer output-stream)]
+      (letfn [(continue []
+                (async/go
+                  (if-some [^String msg (async/<! ch)]
+                    (future
+                      (try
+                        (.write out msg)
+                        (.flush out)
+                        (continue)
+                        (catch Throwable ex
+                          #_(binding [*out* *err*] ;; 99.999% of the time we don't care about exceptions here, I think.
+                              (clojure.stacktrace/print-cause-trace ex))
+                          (async/close! ch)
+                          (.close out))))
+                    (.close out))))]
+        (continue)))))
 
 (def CRLF "\r\n")
 (def EVENT_FIELD "event: ")
