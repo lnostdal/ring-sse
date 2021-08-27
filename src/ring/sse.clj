@@ -24,7 +24,7 @@
                               (clojure.stacktrace/print-cause-trace ex))
                           (async/close! ch)
                           (.close out))))
-                    (.close out))))]
+                    (try (.close out) (catch Throwable ex)))))]
         (continue)))))
 
 (def CRLF "\r\n")

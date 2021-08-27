@@ -1,4 +1,4 @@
-(defproject lnostdal/ring-sse "0.2.10"
+(defproject lnostdal/ring-sse "0.2.11"
   :description "Ring async (Spec 1.4+) Server-Sent Events handler (and helpers)"
   :url "https://github.com/lnostdal/ring-sse"
   :license {:name "The MIT License"
