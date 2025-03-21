@@ -7,6 +7,14 @@
 
 (set! *warn-on-reflection* true)
 
+
+(defmacro vfuture [& body]
+  `(let [bnds# (get-thread-bindings)]
+     (.start (Thread/ofVirtual)
+             (fn [] (with-bindings bnds#
+                      ~@body)))))
+
+
 (extend-protocol ring/StreamableResponseBody
   clojure.core.async.impl.channels.ManyToManyChannel
   (write-body-to-stream [ch response ^java.io.OutputStream output-stream]
@@ -14,7 +22,7 @@
       (letfn [(continue []
                 (async/go
                   (if-some [^String msg (async/<! ch)]
-                    (future
+                    (vfuture ;; Confirmed that once `out` is full, .write/.flush will block for about 60 seconds. -- lnostdal
                       (try
                         (.write out msg)
                         (.flush out)
@@ -23,7 +31,7 @@
                           #_(binding [*out* *err*] ;; 99.999% of the time we don't care about exceptions here, I think.
                               (clojure.stacktrace/print-cause-trace ex))
                           (async/close! ch)
-                          (.close out))))
+                          (try (.close out) (catch Throwable ex)))))
                     (try (.close out) (catch Throwable ex)))))]
         (continue)))))
 
