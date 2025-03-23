@@ -1,0 +1,9 @@
+#_{:description "Ring async (Spec 1.4+) Server-Sent Events handler (and helpers)"
+   :url "https://github.com/lnostdal/ring-sse"
+   :license {:name "The MIT License"
+             :url "https://opensource.org/licenses/MIT"}}
+
+{:paths ["src" "classes"]
+ :deps {org.clojure/clojure {:mvn/version "1.12.0"}
+        org.clojure/core.async {:mvn/version "1.7.701"}
+        ring/ring-core {:mvn/version "1.13.0"}}}
